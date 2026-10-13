@@ -1,0 +1,9 @@
+customer_id,customer_name,city,country,segment,is_active
+1,Noordwind BV,Amsterdam,NL,Zakelijk,1
+2,Delta Retail,Rotterdam,NL,Zakelijk,1
+3,Emma de Vries,Utrecht,NL,Particulier,1
+4,TechHub GmbH,Berlin,DE,Zakelijk,1
+5,Lucas Bakker,Breda,NL,Particulier,1
+6,Nordic AB,Stockholm,SE,Zakelijk,1
+7,Oude Klant BV,Eindhoven,NL,Zakelijk,0
+8,Sophie Janssen,Haarlem,NL,Particulier,1

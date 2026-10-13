@@ -1,0 +1,13 @@
+order_id,customer_id,order_date,status,sales_channel
+1001,1,2026-01-05,Completed,Online
+1002,3,2026-01-07,Completed,Online
+1003,2,2026-01-12,Completed,Accountmanager
+1004,4,2026-02-03,Completed,Online
+1005,1,2026-02-10,Cancelled,Online
+1006,5,2026-02-14,Completed,Online
+1007,6,2026-03-02,Completed,Accountmanager
+1008,8,2026-03-11,Pending,Online
+1009,2,2026-03-16,Completed,Accountmanager
+1010,3,2026-04-04,Completed,Online
+1011,7,2026-04-09,Completed,Online
+1012,1,2026-04-15,Completed,Online

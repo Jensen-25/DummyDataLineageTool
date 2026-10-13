@@ -1,0 +1,62 @@
+[
+  {
+    "script": "01_stg_customers.sql",
+    "target": "stg_customers",
+    "sources": [
+      "Customers"
+    ],
+    "dependencies": []
+  },
+  {
+    "script": "02_stg_products.sql",
+    "target": "stg_products",
+    "sources": [
+      "Products"
+    ],
+    "dependencies": []
+  },
+  {
+    "script": "03_stg_orders.sql",
+    "target": "stg_orders",
+    "sources": [
+      "Orders"
+    ],
+    "dependencies": []
+  },
+  {
+    "script": "04_stg_order_items.sql",
+    "target": "stg_order_items",
+    "sources": [
+      "OrderItems"
+    ],
+    "dependencies": []
+  },
+  {
+    "script": "05_mart_customer_revenue.sql",
+    "target": "mart_customer_revenue",
+    "sources": [
+      "stg_customers",
+      "stg_orders",
+      "stg_order_items"
+    ],
+    "dependencies": [
+      "01_stg_customers.sql",
+      "03_stg_orders.sql",
+      "04_stg_order_items.sql"
+    ]
+  },
+  {
+    "script": "06_mart_product_sales.sql",
+    "target": "mart_product_sales",
+    "sources": [
+      "stg_products",
+      "stg_order_items",
+      "stg_orders"
+    ],
+    "dependencies": [
+      "02_stg_products.sql",
+      "04_stg_order_items.sql",
+      "03_stg_orders.sql"
+    ]
+  }
+]

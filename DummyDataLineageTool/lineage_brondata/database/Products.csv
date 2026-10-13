@@ -1,0 +1,7 @@
+product_id,product_name,category,unit_price_eur,is_active
+101,Laptopstandaard,Accessoires,35.00,1
+102,USB-C hub,Elektronica,49.50,1
+103,Monitor 27 inch,Elektronica,219.00,1
+104,Bureaulamp,Kantoor,42.00,1
+105,Notitieboek,Kantoor,8.75,1
+106,Oud toetsenbord,Elektronica,29.00,0
