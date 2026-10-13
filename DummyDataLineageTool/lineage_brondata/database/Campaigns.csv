@@ -1,0 +1,5 @@
+campaign_id,campaign_name,sales_channel,start_date,end_date,budget_eur
+201,Winter Online Push,Online,2026-01-01,2026-01-31,1200.00
+202,Account Growth Q1,Accountmanager,2026-01-01,2026-03-31,2500.00
+203,Spring Retention,Online,2026-03-01,2026-04-30,1800.00
+204,Partner Desk Pilot,Partner,2026-02-01,2026-04-30,900.00

@@ -1,11 +1,16 @@
 -- SQL Server (T-SQL). Draai dit bestand in een lege testdatabase.
--- De vier CSV-bestanden bevatten exact dezelfde brondata.
+-- De negen CSV-bestanden bevatten exact dezelfde brondata.
 IF SCHEMA_ID('dbo') IS NULL EXEC('CREATE SCHEMA dbo');
 
+IF OBJECT_ID('dbo.SupportTickets','U') IS NOT NULL DROP TABLE dbo.SupportTickets;
+IF OBJECT_ID('dbo.Shipments','U') IS NOT NULL DROP TABLE dbo.Shipments;
+IF OBJECT_ID('dbo.Payments','U') IS NOT NULL DROP TABLE dbo.Payments;
 IF OBJECT_ID('dbo.OrderItems','U') IS NOT NULL DROP TABLE dbo.OrderItems;
 IF OBJECT_ID('dbo.Orders','U') IS NOT NULL DROP TABLE dbo.Orders;
 IF OBJECT_ID('dbo.Products','U') IS NOT NULL DROP TABLE dbo.Products;
 IF OBJECT_ID('dbo.Customers','U') IS NOT NULL DROP TABLE dbo.Customers;
+IF OBJECT_ID('dbo.Campaigns','U') IS NOT NULL DROP TABLE dbo.Campaigns;
+IF OBJECT_ID('dbo.Regions','U') IS NOT NULL DROP TABLE dbo.Regions;
 
 CREATE TABLE dbo.Customers (
  customer_id INT PRIMARY KEY,
@@ -35,6 +40,42 @@ CREATE TABLE dbo.OrderItems (
  product_id INT NOT NULL REFERENCES dbo.Products(product_id),
  quantity INT NOT NULL CHECK (quantity > 0),
  unit_price_eur DECIMAL(10,2) NOT NULL CHECK (unit_price_eur >= 0)
+);
+CREATE TABLE dbo.Regions (
+ country CHAR(2) PRIMARY KEY,
+ region_name NVARCHAR(60) NOT NULL,
+ market_tier NVARCHAR(20) NOT NULL
+);
+CREATE TABLE dbo.Campaigns (
+ campaign_id INT PRIMARY KEY,
+ campaign_name NVARCHAR(100) NOT NULL,
+ sales_channel VARCHAR(30) NOT NULL,
+ start_date DATE NOT NULL,
+ end_date DATE NOT NULL,
+ budget_eur DECIMAL(10,2) NOT NULL CHECK (budget_eur >= 0)
+);
+CREATE TABLE dbo.Payments (
+ payment_id INT PRIMARY KEY,
+ order_id INT NOT NULL REFERENCES dbo.Orders(order_id),
+ payment_method VARCHAR(30) NOT NULL,
+ paid_amount_eur DECIMAL(10,2) NOT NULL CHECK (paid_amount_eur >= 0),
+ payment_status VARCHAR(20) NOT NULL
+);
+CREATE TABLE dbo.Shipments (
+ shipment_id INT PRIMARY KEY,
+ order_id INT NOT NULL REFERENCES dbo.Orders(order_id),
+ carrier VARCHAR(30) NOT NULL,
+ shipped_date DATE NOT NULL,
+ delivery_status VARCHAR(20) NOT NULL,
+ shipping_cost_eur DECIMAL(10,2) NOT NULL CHECK (shipping_cost_eur >= 0)
+);
+CREATE TABLE dbo.SupportTickets (
+ ticket_id INT PRIMARY KEY,
+ customer_id INT NOT NULL REFERENCES dbo.Customers(customer_id),
+ order_id INT NOT NULL REFERENCES dbo.Orders(order_id),
+ created_date DATE NOT NULL,
+ issue_type VARCHAR(30) NOT NULL,
+ satisfaction_score INT NOT NULL CHECK (satisfaction_score BETWEEN 1 AND 5)
 );
 -- Customers: 8 rijen
 INSERT INTO dbo.Customers (customer_id, customer_name, city, country, segment, is_active) VALUES (1, N'Noordwind BV', N'Amsterdam', N'NL', N'Zakelijk', 1);
@@ -92,3 +133,50 @@ INSERT INTO dbo.OrderItems (order_item_id, order_id, product_id, quantity, unit_
 INSERT INTO dbo.OrderItems (order_item_id, order_id, product_id, quantity, unit_price_eur) VALUES (21, 1011, 106, 1, N'29.00');
 INSERT INTO dbo.OrderItems (order_item_id, order_id, product_id, quantity, unit_price_eur) VALUES (22, 1012, 103, 1, N'219.00');
 INSERT INTO dbo.OrderItems (order_item_id, order_id, product_id, quantity, unit_price_eur) VALUES (23, 1012, 104, 2, N'42.00');
+
+-- Regions: 4 rijen
+INSERT INTO dbo.Regions (country, region_name, market_tier) VALUES (N'NL', N'Benelux', N'Core');
+INSERT INTO dbo.Regions (country, region_name, market_tier) VALUES (N'DE', N'DACH', N'Growth');
+INSERT INTO dbo.Regions (country, region_name, market_tier) VALUES (N'SE', N'Nordics', N'Growth');
+INSERT INTO dbo.Regions (country, region_name, market_tier) VALUES (N'BE', N'Benelux', N'Core');
+
+-- Campaigns: 4 rijen
+INSERT INTO dbo.Campaigns (campaign_id, campaign_name, sales_channel, start_date, end_date, budget_eur) VALUES (201, N'Winter Online Push', N'Online', '2026-01-01', '2026-01-31', N'1200.00');
+INSERT INTO dbo.Campaigns (campaign_id, campaign_name, sales_channel, start_date, end_date, budget_eur) VALUES (202, N'Account Growth Q1', N'Accountmanager', '2026-01-01', '2026-03-31', N'2500.00');
+INSERT INTO dbo.Campaigns (campaign_id, campaign_name, sales_channel, start_date, end_date, budget_eur) VALUES (203, N'Spring Retention', N'Online', '2026-03-01', '2026-04-30', N'1800.00');
+INSERT INTO dbo.Campaigns (campaign_id, campaign_name, sales_channel, start_date, end_date, budget_eur) VALUES (204, N'Partner Desk Pilot', N'Partner', '2026-02-01', '2026-04-30', N'900.00');
+
+-- Payments: 12 rijen
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (501, 1001, N'iDEAL', N'119.50', N'Paid');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (502, 1002, N'Creditcard', N'68.25', N'Paid');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (503, 1003, N'Invoice', N'975.00', N'Paid');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (504, 1004, N'Creditcard', N'289.00', N'Paid');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (505, 1005, N'iDEAL', N'0.00', N'Cancelled');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (506, 1006, N'iDEAL', N'59.50', N'Paid');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (507, 1007, N'Invoice', N'543.00', N'Paid');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (508, 1008, N'Creditcard', N'0.00', N'Pending');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (509, 1009, N'Invoice', N'309.00', N'Paid');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (510, 1010, N'iDEAL', N'70.00', N'Paid');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (511, 1011, N'Invoice', N'29.00', N'Paid');
+INSERT INTO dbo.Payments (payment_id, order_id, payment_method, paid_amount_eur, payment_status) VALUES (512, 1012, N'Creditcard', N'303.00', N'Paid');
+
+-- Shipments: 10 rijen
+INSERT INTO dbo.Shipments (shipment_id, order_id, carrier, shipped_date, delivery_status, shipping_cost_eur) VALUES (701, 1001, N'DHL', '2026-01-06', N'Delivered', N'6.95');
+INSERT INTO dbo.Shipments (shipment_id, order_id, carrier, shipped_date, delivery_status, shipping_cost_eur) VALUES (702, 1002, N'PostNL', '2026-01-08', N'Delivered', N'4.95');
+INSERT INTO dbo.Shipments (shipment_id, order_id, carrier, shipped_date, delivery_status, shipping_cost_eur) VALUES (703, 1003, N'DHL', '2026-01-13', N'Delivered', N'12.50');
+INSERT INTO dbo.Shipments (shipment_id, order_id, carrier, shipped_date, delivery_status, shipping_cost_eur) VALUES (704, 1004, N'UPS', '2026-02-04', N'Delivered', N'9.95');
+INSERT INTO dbo.Shipments (shipment_id, order_id, carrier, shipped_date, delivery_status, shipping_cost_eur) VALUES (705, 1006, N'PostNL', '2026-02-15', N'Delivered', N'4.95');
+INSERT INTO dbo.Shipments (shipment_id, order_id, carrier, shipped_date, delivery_status, shipping_cost_eur) VALUES (706, 1007, N'DHL', '2026-03-03', N'Delivered', N'12.50');
+INSERT INTO dbo.Shipments (shipment_id, order_id, carrier, shipped_date, delivery_status, shipping_cost_eur) VALUES (707, 1009, N'UPS', '2026-03-17', N'Delayed', N'9.95');
+INSERT INTO dbo.Shipments (shipment_id, order_id, carrier, shipped_date, delivery_status, shipping_cost_eur) VALUES (708, 1010, N'PostNL', '2026-04-05', N'Delivered', N'4.95');
+INSERT INTO dbo.Shipments (shipment_id, order_id, carrier, shipped_date, delivery_status, shipping_cost_eur) VALUES (709, 1011, N'DHL', '2026-04-10', N'Returned', N'6.95');
+INSERT INTO dbo.Shipments (shipment_id, order_id, carrier, shipped_date, delivery_status, shipping_cost_eur) VALUES (710, 1012, N'UPS', '2026-04-16', N'Delivered', N'9.95');
+
+-- SupportTickets: 7 rijen
+INSERT INTO dbo.SupportTickets (ticket_id, customer_id, order_id, created_date, issue_type, satisfaction_score) VALUES (801, 1, 1001, '2026-01-09', N'Delivery', 4);
+INSERT INTO dbo.SupportTickets (ticket_id, customer_id, order_id, created_date, issue_type, satisfaction_score) VALUES (802, 2, 1003, '2026-01-16', N'Invoice', 3);
+INSERT INTO dbo.SupportTickets (ticket_id, customer_id, order_id, created_date, issue_type, satisfaction_score) VALUES (803, 4, 1004, '2026-02-08', N'Product', 5);
+INSERT INTO dbo.SupportTickets (ticket_id, customer_id, order_id, created_date, issue_type, satisfaction_score) VALUES (804, 5, 1006, '2026-02-20', N'Delivery', 4);
+INSERT INTO dbo.SupportTickets (ticket_id, customer_id, order_id, created_date, issue_type, satisfaction_score) VALUES (805, 2, 1009, '2026-03-22', N'Delivery', 2);
+INSERT INTO dbo.SupportTickets (ticket_id, customer_id, order_id, created_date, issue_type, satisfaction_score) VALUES (806, 7, 1011, '2026-04-12', N'Return', 1);
+INSERT INTO dbo.SupportTickets (ticket_id, customer_id, order_id, created_date, issue_type, satisfaction_score) VALUES (807, 1, 1012, '2026-04-19', N'Product', 4);

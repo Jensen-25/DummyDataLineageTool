@@ -1,0 +1,13 @@
+payment_id,order_id,payment_method,paid_amount_eur,payment_status
+501,1001,iDEAL,119.50,Paid
+502,1002,Creditcard,68.25,Paid
+503,1003,Invoice,975.00,Paid
+504,1004,Creditcard,289.00,Paid
+505,1005,iDEAL,0.00,Cancelled
+506,1006,iDEAL,59.50,Paid
+507,1007,Invoice,543.00,Paid
+508,1008,Creditcard,0.00,Pending
+509,1009,Invoice,309.00,Paid
+510,1010,iDEAL,70.00,Paid
+511,1011,Invoice,29.00,Paid
+512,1012,Creditcard,303.00,Paid

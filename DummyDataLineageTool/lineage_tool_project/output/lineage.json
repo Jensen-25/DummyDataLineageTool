@@ -5,7 +5,14 @@
     "sources": [
       "Customers"
     ],
-    "dependencies": []
+    "source_keys": [
+      {
+        "source": "Customers",
+        "key": null
+      }
+    ],
+    "dependencies": [],
+    "dependency_keys": []
   },
   {
     "script": "02_stg_products.sql",
@@ -13,7 +20,14 @@
     "sources": [
       "Products"
     ],
-    "dependencies": []
+    "source_keys": [
+      {
+        "source": "Products",
+        "key": null
+      }
+    ],
+    "dependencies": [],
+    "dependency_keys": []
   },
   {
     "script": "03_stg_orders.sql",
@@ -21,7 +35,14 @@
     "sources": [
       "Orders"
     ],
-    "dependencies": []
+    "source_keys": [
+      {
+        "source": "Orders",
+        "key": null
+      }
+    ],
+    "dependencies": [],
+    "dependency_keys": []
   },
   {
     "script": "04_stg_order_items.sql",
@@ -29,34 +50,461 @@
     "sources": [
       "OrderItems"
     ],
-    "dependencies": []
+    "source_keys": [
+      {
+        "source": "OrderItems",
+        "key": null
+      }
+    ],
+    "dependencies": [],
+    "dependency_keys": []
   },
   {
-    "script": "05_mart_customer_revenue.sql",
-    "target": "mart_customer_revenue",
+    "script": "05_stg_regions.sql",
+    "target": "stg_regions",
     "sources": [
-      "stg_customers",
+      "Regions"
+    ],
+    "source_keys": [
+      {
+        "source": "Regions",
+        "key": null
+      }
+    ],
+    "dependencies": [],
+    "dependency_keys": []
+  },
+  {
+    "script": "06_stg_campaigns.sql",
+    "target": "stg_campaigns",
+    "sources": [
+      "Campaigns"
+    ],
+    "source_keys": [
+      {
+        "source": "Campaigns",
+        "key": null
+      }
+    ],
+    "dependencies": [],
+    "dependency_keys": []
+  },
+  {
+    "script": "07_stg_payments.sql",
+    "target": "stg_payments",
+    "sources": [
+      "Payments"
+    ],
+    "source_keys": [
+      {
+        "source": "Payments",
+        "key": null
+      }
+    ],
+    "dependencies": [],
+    "dependency_keys": []
+  },
+  {
+    "script": "08_stg_shipments.sql",
+    "target": "stg_shipments",
+    "sources": [
+      "Shipments"
+    ],
+    "source_keys": [
+      {
+        "source": "Shipments",
+        "key": null
+      }
+    ],
+    "dependencies": [],
+    "dependency_keys": []
+  },
+  {
+    "script": "09_stg_support_tickets.sql",
+    "target": "stg_support_tickets",
+    "sources": [
+      "SupportTickets"
+    ],
+    "source_keys": [
+      {
+        "source": "SupportTickets",
+        "key": null
+      }
+    ],
+    "dependencies": [],
+    "dependency_keys": []
+  },
+  {
+    "script": "10_int_order_lines.sql",
+    "target": "int_order_lines",
+    "sources": [
       "stg_orders",
       "stg_order_items"
     ],
+    "source_keys": [
+      {
+        "source": "stg_orders",
+        "key": "o.order_id = i.order_id"
+      },
+      {
+        "source": "stg_order_items",
+        "key": "o.order_id = i.order_id"
+      }
+    ],
     "dependencies": [
-      "01_stg_customers.sql",
       "03_stg_orders.sql",
       "04_stg_order_items.sql"
+    ],
+    "dependency_keys": [
+      {
+        "source": "stg_orders",
+        "script": "03_stg_orders.sql",
+        "key": "o.order_id = i.order_id"
+      },
+      {
+        "source": "stg_order_items",
+        "script": "04_stg_order_items.sql",
+        "key": "o.order_id = i.order_id"
+      }
     ]
   },
   {
-    "script": "06_mart_product_sales.sql",
+    "script": "11_int_customer_profile.sql",
+    "target": "int_customer_profile",
+    "sources": [
+      "stg_customers",
+      "stg_regions"
+    ],
+    "source_keys": [
+      {
+        "source": "stg_customers",
+        "key": "c.country = r.country"
+      },
+      {
+        "source": "stg_regions",
+        "key": "c.country = r.country"
+      }
+    ],
+    "dependencies": [
+      "01_stg_customers.sql",
+      "05_stg_regions.sql"
+    ],
+    "dependency_keys": [
+      {
+        "source": "stg_customers",
+        "script": "01_stg_customers.sql",
+        "key": "c.country = r.country"
+      },
+      {
+        "source": "stg_regions",
+        "script": "05_stg_regions.sql",
+        "key": "c.country = r.country"
+      }
+    ]
+  },
+  {
+    "script": "12_int_order_finance.sql",
+    "target": "int_order_finance",
+    "sources": [
+      "stg_orders",
+      "stg_payments",
+      "stg_shipments"
+    ],
+    "source_keys": [
+      {
+        "source": "stg_orders",
+        "key": "o.order_id = p.order_id; o.order_id = s.order_id"
+      },
+      {
+        "source": "stg_payments",
+        "key": "o.order_id = p.order_id"
+      },
+      {
+        "source": "stg_shipments",
+        "key": "o.order_id = s.order_id"
+      }
+    ],
+    "dependencies": [
+      "03_stg_orders.sql",
+      "07_stg_payments.sql",
+      "08_stg_shipments.sql"
+    ],
+    "dependency_keys": [
+      {
+        "source": "stg_orders",
+        "script": "03_stg_orders.sql",
+        "key": "o.order_id = p.order_id; o.order_id = s.order_id"
+      },
+      {
+        "source": "stg_payments",
+        "script": "07_stg_payments.sql",
+        "key": "o.order_id = p.order_id"
+      },
+      {
+        "source": "stg_shipments",
+        "script": "08_stg_shipments.sql",
+        "key": "o.order_id = s.order_id"
+      }
+    ]
+  },
+  {
+    "script": "13_int_campaign_orders.sql",
+    "target": "int_campaign_orders",
+    "sources": [
+      "stg_orders",
+      "stg_campaigns"
+    ],
+    "source_keys": [
+      {
+        "source": "stg_orders",
+        "key": "o.sales_channel = c.sales_channel AND o.order_date BETWEEN c.start_date AND c.end_date"
+      },
+      {
+        "source": "stg_campaigns",
+        "key": "o.sales_channel = c.sales_channel AND o.order_date BETWEEN c.start_date AND c.end_date"
+      }
+    ],
+    "dependencies": [
+      "03_stg_orders.sql",
+      "06_stg_campaigns.sql"
+    ],
+    "dependency_keys": [
+      {
+        "source": "stg_orders",
+        "script": "03_stg_orders.sql",
+        "key": "o.sales_channel = c.sales_channel AND o.order_date BETWEEN c.start_date AND c.end_date"
+      },
+      {
+        "source": "stg_campaigns",
+        "script": "06_stg_campaigns.sql",
+        "key": "o.sales_channel = c.sales_channel AND o.order_date BETWEEN c.start_date AND c.end_date"
+      }
+    ]
+  },
+  {
+    "script": "14_int_customer_support.sql",
+    "target": "int_customer_support",
+    "sources": [
+      "int_customer_profile",
+      "stg_support_tickets"
+    ],
+    "source_keys": [
+      {
+        "source": "int_customer_profile",
+        "key": "p.customer_id = t.customer_id"
+      },
+      {
+        "source": "stg_support_tickets",
+        "key": "p.customer_id = t.customer_id"
+      }
+    ],
+    "dependencies": [
+      "11_int_customer_profile.sql",
+      "09_stg_support_tickets.sql"
+    ],
+    "dependency_keys": [
+      {
+        "source": "int_customer_profile",
+        "script": "11_int_customer_profile.sql",
+        "key": "p.customer_id = t.customer_id"
+      },
+      {
+        "source": "stg_support_tickets",
+        "script": "09_stg_support_tickets.sql",
+        "key": "p.customer_id = t.customer_id"
+      }
+    ]
+  },
+  {
+    "script": "15_mart_customer_revenue.sql",
+    "target": "mart_customer_revenue",
+    "sources": [
+      "int_customer_profile",
+      "int_order_lines",
+      "int_order_finance"
+    ],
+    "source_keys": [
+      {
+        "source": "int_customer_profile",
+        "key": "c.customer_id = l.customer_id"
+      },
+      {
+        "source": "int_order_lines",
+        "key": "c.customer_id = l.customer_id; l.order_id = f.order_id"
+      },
+      {
+        "source": "int_order_finance",
+        "key": "l.order_id = f.order_id"
+      }
+    ],
+    "dependencies": [
+      "11_int_customer_profile.sql",
+      "10_int_order_lines.sql",
+      "12_int_order_finance.sql"
+    ],
+    "dependency_keys": [
+      {
+        "source": "int_customer_profile",
+        "script": "11_int_customer_profile.sql",
+        "key": "c.customer_id = l.customer_id"
+      },
+      {
+        "source": "int_order_lines",
+        "script": "10_int_order_lines.sql",
+        "key": "c.customer_id = l.customer_id; l.order_id = f.order_id"
+      },
+      {
+        "source": "int_order_finance",
+        "script": "12_int_order_finance.sql",
+        "key": "l.order_id = f.order_id"
+      }
+    ]
+  },
+  {
+    "script": "16_mart_product_sales.sql",
     "target": "mart_product_sales",
     "sources": [
       "stg_products",
-      "stg_order_items",
-      "stg_orders"
+      "int_order_lines"
+    ],
+    "source_keys": [
+      {
+        "source": "stg_products",
+        "key": "p.product_id = l.product_id"
+      },
+      {
+        "source": "int_order_lines",
+        "key": "p.product_id = l.product_id"
+      }
     ],
     "dependencies": [
       "02_stg_products.sql",
-      "04_stg_order_items.sql",
-      "03_stg_orders.sql"
+      "10_int_order_lines.sql"
+    ],
+    "dependency_keys": [
+      {
+        "source": "stg_products",
+        "script": "02_stg_products.sql",
+        "key": "p.product_id = l.product_id"
+      },
+      {
+        "source": "int_order_lines",
+        "script": "10_int_order_lines.sql",
+        "key": "p.product_id = l.product_id"
+      }
+    ]
+  },
+  {
+    "script": "17_mart_region_performance.sql",
+    "target": "mart_region_performance",
+    "sources": [
+      "int_customer_profile",
+      "int_order_lines",
+      "int_order_finance"
+    ],
+    "source_keys": [
+      {
+        "source": "int_customer_profile",
+        "key": "c.customer_id = l.customer_id"
+      },
+      {
+        "source": "int_order_lines",
+        "key": "c.customer_id = l.customer_id; l.order_id = f.order_id"
+      },
+      {
+        "source": "int_order_finance",
+        "key": "l.order_id = f.order_id"
+      }
+    ],
+    "dependencies": [
+      "11_int_customer_profile.sql",
+      "10_int_order_lines.sql",
+      "12_int_order_finance.sql"
+    ],
+    "dependency_keys": [
+      {
+        "source": "int_customer_profile",
+        "script": "11_int_customer_profile.sql",
+        "key": "c.customer_id = l.customer_id"
+      },
+      {
+        "source": "int_order_lines",
+        "script": "10_int_order_lines.sql",
+        "key": "c.customer_id = l.customer_id; l.order_id = f.order_id"
+      },
+      {
+        "source": "int_order_finance",
+        "script": "12_int_order_finance.sql",
+        "key": "l.order_id = f.order_id"
+      }
+    ]
+  },
+  {
+    "script": "18_mart_campaign_roi.sql",
+    "target": "mart_campaign_roi",
+    "sources": [
+      "int_campaign_orders",
+      "int_order_lines"
+    ],
+    "source_keys": [
+      {
+        "source": "int_campaign_orders",
+        "key": "co.order_id = l.order_id"
+      },
+      {
+        "source": "int_order_lines",
+        "key": "co.order_id = l.order_id"
+      }
+    ],
+    "dependencies": [
+      "13_int_campaign_orders.sql",
+      "10_int_order_lines.sql"
+    ],
+    "dependency_keys": [
+      {
+        "source": "int_campaign_orders",
+        "script": "13_int_campaign_orders.sql",
+        "key": "co.order_id = l.order_id"
+      },
+      {
+        "source": "int_order_lines",
+        "script": "10_int_order_lines.sql",
+        "key": "co.order_id = l.order_id"
+      }
+    ]
+  },
+  {
+    "script": "19_mart_service_health.sql",
+    "target": "mart_service_health",
+    "sources": [
+      "int_customer_support",
+      "int_order_finance"
+    ],
+    "source_keys": [
+      {
+        "source": "int_customer_support",
+        "key": "s.order_id = f.order_id"
+      },
+      {
+        "source": "int_order_finance",
+        "key": "s.order_id = f.order_id"
+      }
+    ],
+    "dependencies": [
+      "14_int_customer_support.sql",
+      "12_int_order_finance.sql"
+    ],
+    "dependency_keys": [
+      {
+        "source": "int_customer_support",
+        "script": "14_int_customer_support.sql",
+        "key": "s.order_id = f.order_id"
+      },
+      {
+        "source": "int_order_finance",
+        "script": "12_int_order_finance.sql",
+        "key": "s.order_id = f.order_id"
+      }
     ]
   }
 ]

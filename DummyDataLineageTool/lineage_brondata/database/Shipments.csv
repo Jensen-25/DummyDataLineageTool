@@ -1,0 +1,11 @@
+shipment_id,order_id,carrier,shipped_date,delivery_status,shipping_cost_eur
+701,1001,DHL,2026-01-06,Delivered,6.95
+702,1002,PostNL,2026-01-08,Delivered,4.95
+703,1003,DHL,2026-01-13,Delivered,12.50
+704,1004,UPS,2026-02-04,Delivered,9.95
+705,1006,PostNL,2026-02-15,Delivered,4.95
+706,1007,DHL,2026-03-03,Delivered,12.50
+707,1009,UPS,2026-03-17,Delayed,9.95
+708,1010,PostNL,2026-04-05,Delivered,4.95
+709,1011,DHL,2026-04-10,Returned,6.95
+710,1012,UPS,2026-04-16,Delivered,9.95
